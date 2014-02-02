@@ -98,8 +98,7 @@
 ;; --- project-explorer -------------------------------------------------------
 
 (require-package 'project-explorer)
-(setq evil-emacs-state-modes
-      (car '('project-explorer-mode evil-emacs-state-modes)))
+(add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
 (setq pe/width 23)
 
 
@@ -235,7 +234,7 @@
 (global-set-key (kbd "C-l") 'windmove-right)
 (global-set-key (kbd "C-k")    'windmove-up)
 (global-set-key (kbd "C-j")  'windmove-down)
-(global-set-key (kbd "C-q")  'delete-window)
+(define-key evil-normal-state-map ",q" 'delete-window)
 
 ;; buffers
 (define-key evil-normal-state-map "\C-p" nil)

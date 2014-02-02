@@ -2,6 +2,6 @@
 !.gitignore
 
 !init.el
-!persp-confs/
-!persp-confs/.keepme
+!lisp/
+!lisp/*
 
