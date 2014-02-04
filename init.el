@@ -60,6 +60,16 @@
 (evil-mode 1)
 
 
+;; --- evil-nerd-commenter ----------------------------------------------------
+
+(require-package 'evil-nerd-commenter)
+(define-key evil-normal-state-map ",ci" 'evilnc-comment-or-uncomment-lines)
+(define-key evil-normal-state-map ",cl" 'evilnc-comment-or-uncomment-to-the-line)
+(define-key evil-normal-state-map ",cc" 'evilnc-comment-or-uncomment-lines)
+(define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
+(define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
+
+
 ;; --- flx-ido ----------------------------------------------------------------
 
 (require-package 'flx-ido)
@@ -153,6 +163,22 @@
 
 (require-package 'magit)
 ;(require-package 'magit-filenotify)
+
+
+;; --- haskell-mode -----------------------------------------------------------
+
+(require-package 'haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(eval-after-load "haskell-mode"
+  '(progn
+    (define-key haskell-mode-map (kbd "C-x C-d") nil)
+    (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+    (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+    (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+    (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+    (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+    (define-key haskell-mode-map (kbd "C-c M-.") nil)
+    (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
 
 ;; ----------------------------------------------------------------------------
@@ -253,6 +279,6 @@
 (require 'cc-mode)
 (setq c-default-style "bsd" c-basic-offset 4)
 (c-set-offset 'case-label '+)
-(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+(define-key c-mode-base-map (kbd "RET") 'c-indent-new-comment-line)
 
 
