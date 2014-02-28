@@ -181,11 +181,117 @@
     (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
 
+;; --- w3m --------------------------------------------------------------------
+
+(require-package 'w3m)
+(setq browse-url-browser-function 'w3m-goto-url-new-session)
+(setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
+(setq w3m-default-display-inline-images t)
+(add-hook 'w3m-mode-hook (lambda () (evil-normal-state)))
+
+(defun reddit (reddit)
+  "Opens the REDDIT in w3m-new-session"
+  (interactive (list
+                 (read-string "Enter the reddit (default: gamedev): " nil nil "gamedev" nil)))
+  (browse-url (format "http://m.reddit.com/r/%s" reddit))
+  )
+
+(defun wikipedia-search (search-term)
+  "Search for SEARCH-TERM on wikipedia"
+  (interactive
+    (let ((term (if mark-active
+                  (buffer-substring (region-beginning) (region-end))
+                  (word-at-point))))
+      (list
+        (read-string
+          (format "Wikipedia (%s):" term) nil nil term)))
+    )
+  (browse-url
+    (concat
+      "http://en.m.wikipedia.org/w/index.php?search="
+      search-term
+      ))
+  )
+
+
+;; --- switch-window ----------------------------------------------------------
+
+(require-package 'switch-window)
+(global-set-key (kbd "C-9") 'switch-window)
+(global-set-key (kbd "C-;") 'switch-window)
+
+
+;; --- win-switch -------------------------------------------------------------
+
+(require-package 'win-switch)
+(setq win-switch-window-threshold 0)
+(setq win-switch-other-window-first nil)
+(setq win-switch-idle-time 5)
+
+;; move
+(win-switch-set-keys '("h") 'left)
+(win-switch-set-keys '("k") 'up)
+(win-switch-set-keys '("j") 'down)
+(win-switch-set-keys '("l") 'right)
+(win-switch-set-keys '("n") 'next-window)
+(win-switch-set-keys '("p") 'previous-window)
+(win-switch-set-keys '("O") 'other-frame)
+
+;; resize
+(win-switch-set-keys '("K") 'enlarge-vertically)
+(win-switch-set-keys '("J") 'shrink-vertically)
+(win-switch-set-keys '("H") 'enlarge-horizontally)
+(win-switch-set-keys '("L") 'shrink-horizontally)
+
+;; modify
+(win-switch-set-keys '("v") 'split-horizontally)
+(win-switch-set-keys '("s") 'split-vertically)
+(win-switch-set-keys '("d") 'delete-window)
+
+(win-switch-set-keys '("\M-\C-g") 'emergency-exit)
+
+(global-set-key (kbd "C-'") 'win-switch-dispatch)
+
+
+;; --- buffer-move ------------------------------------------------------------
+
+(require-package 'buffer-move)
+(global-set-key (kbd "M-h") 'buf-move-left)
+(global-set-key (kbd "M-l") 'buf-move-right)
+(global-set-key (kbd "M-k") 'buf-move-up)
+(global-set-key (kbd "M-j") 'buf-move-down)
+
+
+;; --- dired-details+ ---------------------------------------------------------
+
+(require-package 'dired-details+)
+
+
+;; --- auctex -----------------------------------------------------------------
+
+(require 'tex)
+(require 'preview)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-PDF-mode t)
+(TeX-global-PDF-mode t)
+(setq-default TeX-master nil)
+
+(require 'tex-site)
+(add-hook 'TeX-mode-hook
+          (lambda ()
+            (add-to-list 'TeX-output-view-style
+                         '("^pdf$" "."
+                           "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+
+
 ;; ----------------------------------------------------------------------------
 ;; languages
 ;; ----------------------------------------------------------------------------
 
+(setq lua-indent-level 4)
 (require-package 'lua-mode)
+
 (require-package 'cmake-mode)
 
 
@@ -229,6 +335,12 @@
 ;; gdb
 (setq gdb-many-windows t)
 
+;; dired
+(setq-default dired-listing-switches "-alhv")
+
+;; uniquify
+(require 'uniquify)
+
 
 ;; ----------------------------------------------------------------------------
 ;; keys
@@ -241,7 +353,7 @@
 ;; apps
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(define-key evil-normal-state-map ",t" 'multi-term)
+(define-key evil-normal-state-map ",t" 'eshell)
 (define-key evil-normal-state-map ",p" 'project-explorer-open)
 
 ;; persp
@@ -268,6 +380,14 @@
 (define-key evil-normal-state-map "\C-n" nil)
 (global-set-key (kbd "C-n") 'next-buffer)
 
+;; save-load
+(defun cgame-scratch () (interactive) (write-file "scratch.lua"))
+(defun cgame-scratch-region ()
+  (interactive)
+  (write-region (region-beginning) (region-end) "scratch.lua"))
+(define-key evil-normal-state-map ",c" 'cgame-scratch-region)
+(define-key evil-visual-state-map ",c" 'cgame-scratch-region)
+
 
 ;; ----------------------------------------------------------------------------
 ;; formatting
@@ -280,5 +400,15 @@
 (setq c-default-style "bsd" c-basic-offset 4)
 (c-set-offset 'case-label '+)
 (define-key c-mode-base-map (kbd "RET") 'c-indent-new-comment-line)
+
+
+;; ----------------------------------------------------------------------------
+;; eshell
+;; ----------------------------------------------------------------------------
+
+(defun eshell/clear ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)))
 
 
