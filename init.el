@@ -324,9 +324,6 @@
 (set-frame-parameter (selected-frame) 'alpha '(98 98))
 (add-to-list 'default-frame-alist '(alpha 98 98))
 
-;; initial frame size
-(when window-system (set-frame-size (selected-frame) 141 53))
-
 ;; font
 (defvar *default-font*
   "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
@@ -381,10 +378,12 @@
 (global-set-key (kbd "C-n") 'next-buffer)
 
 ;; save-load
-(defun cgame-scratch () (interactive) (write-file "scratch.lua"))
+(setq cgame-path "/Users/nikki/Development/cgame/")
+(setq cgame-scratch-path (concat cgame-path "/usr/scratch.lua"))
+(defun cgame-scratch () (interactive) (write-file cgame-scratch-path))
 (defun cgame-scratch-region ()
   (interactive)
-  (write-region (region-beginning) (region-end) "scratch.lua"))
+  (write-region (region-beginning) (region-end) cgame-scratch-path))
 (define-key evil-normal-state-map ",c" 'cgame-scratch-region)
 (define-key evil-visual-state-map ",c" 'cgame-scratch-region)
 
