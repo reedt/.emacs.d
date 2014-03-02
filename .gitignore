@@ -5,3 +5,5 @@
 !lisp/
 !lisp/*
 
+*.elc
+
