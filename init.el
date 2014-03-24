@@ -59,6 +59,13 @@
 (require-package 'evil)
 (evil-mode 1)
 
+(define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+(define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+
+(setq-default evil-cross-lines t)
+
 
 ;; --- evil-nerd-commenter ----------------------------------------------------
 
@@ -180,6 +187,11 @@
     (define-key haskell-mode-map (kbd "C-c M-.") nil)
     (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
+;; --- flycheck-hdevtools -----------------------------------------------------
+
+(eval-after-load 'flycheck
+  '(require 'flycheck-hdevtools))
+
 
 ;; --- w3m --------------------------------------------------------------------
 
@@ -214,11 +226,10 @@
   )
 
 
-;; --- switch-window ----------------------------------------------------------
+;; --- window-numbering -------------------------------------------------------
 
-(require-package 'switch-window)
-(global-set-key (kbd "C-9") 'switch-window)
-(global-set-key (kbd "C-;") 'switch-window)
+(require-package 'window-numbering)
+(window-numbering-mode)
 
 
 ;; --- win-switch -------------------------------------------------------------
@@ -267,6 +278,11 @@
 (require-package 'dired-details+)
 
 
+;; --- dired-subtree ----------------------------------------------------------
+
+(require-package 'dired-subtree)
+
+
 ;; --- auctex -----------------------------------------------------------------
 
 (require 'tex)
@@ -283,6 +299,45 @@
             (add-to-list 'TeX-output-view-style
                          '("^pdf$" "."
                            "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
+
+
+;; --- maxframe ---------------------------------------------------------------
+
+(require-package 'maxframe)
+(add-hook 'window-setup-hook 'maximize-frame t)
+
+
+;; --- web-mode ---------------------------------------------------------------
+
+(require-package 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(setq web-mode-engines-alist '(("django" . "\\.html\\'")))
+
+
+;; --- zencoding --------------------------------------------------------------
+
+(require-package 'zencoding-mode)
+(add-hook 'web-mode-hook 'zencoding-mode)
+
+
+;; --- company-jedi -----------------------------------------------------------
+
+(require-package 'company-jedi)
+(add-to-list 'company-backends 'company-jedi)
+(add-hook 'python-mode-hook 'company-jedi-start)
+(setq company-jedi-python-bin "python")
+
+
+;; --- glsl-mode --------------------------------------------------------------
+
+(require-package 'glsl-mode)
 
 
 ;; ----------------------------------------------------------------------------
@@ -304,6 +359,13 @@
 ;; --- gud (with lldb) --------------------------------------------------------
 (require 'gud)
 
+;; --- doc-view-fit-to-page ---------------------------------------------------
+;(require 'doc-view-fit-page)
+;(add-hook 'doc-view-mode-hook
+          ;'(lambda ()
+             ;(local-set-key "f" 'doc-view-fit-page)
+             ;(local-set-key "w" 'doc-view-fit-width)
+             ;(local-set-key "h" 'doc-view-fit-height)))
 
 ;; ----------------------------------------------------------------------------
 ;; interface
@@ -337,6 +399,12 @@
 
 ;; uniquify
 (require 'uniquify)
+
+;; continuous scroll for doc-view
+(setq doc-view-continuous t)
+
+;; allow undo of window config
+(winner-mode 1)
 
 
 ;; ----------------------------------------------------------------------------
@@ -384,8 +452,8 @@
 (defun cgame-scratch-region ()
   (interactive)
   (write-region (region-beginning) (region-end) cgame-scratch-path))
-(define-key evil-normal-state-map ",c" 'cgame-scratch-region)
-(define-key evil-visual-state-map ",c" 'cgame-scratch-region)
+(define-key evil-normal-state-map ",r" 'cgame-scratch-region)
+(define-key evil-visual-state-map ",r" 'cgame-scratch-region)
 
 
 ;; ----------------------------------------------------------------------------
