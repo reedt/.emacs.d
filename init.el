@@ -1,3 +1,14 @@
+;; set exec-path from $PATH
+(defun set-exec-path-from-shell-PATH ()
+  "Sets the exec-path to the same value used by the user shell"
+  (let ((path-from-shell
+	 (replace-regexp-in-string
+	  "[[:space:]\n]*$" ""
+	  (shell-command-to-string "$SHELL -l -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+(set-exec-path-from-shell-PATH)
+
 ;; ----------------------------------------------------------------------------
 ;; .clang_complete reading
 ;; ----------------------------------------------------------------------------
@@ -187,11 +198,6 @@
     (define-key haskell-mode-map (kbd "C-c M-.") nil)
     (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
-;; --- flycheck-hdevtools -----------------------------------------------------
-
-(eval-after-load 'flycheck
-  '(require 'flycheck-hdevtools))
-
 
 ;; --- w3m --------------------------------------------------------------------
 
@@ -325,14 +331,6 @@
 
 (require-package 'zencoding-mode)
 (add-hook 'web-mode-hook 'zencoding-mode)
-
-
-;; --- company-jedi -----------------------------------------------------------
-
-(require-package 'company-jedi)
-(add-to-list 'company-backends 'company-jedi)
-(add-hook 'python-mode-hook 'company-jedi-start)
-(setq company-jedi-python-bin "python")
 
 
 ;; --- glsl-mode --------------------------------------------------------------
