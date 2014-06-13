@@ -159,6 +159,9 @@
   (setq flycheck-clang-include-path (read-c-includes)))
 (add-hook 'c-mode-common-hook 'my-flycheck-c-config)
 
+(add-hook 'c++-mode-hook (lambda ()
+                           (setq flycheck-clang-language-standard "c++11")))
+
 
 ;; --- perspective ------------------------------------------------------------
 
@@ -340,6 +343,17 @@
 (require-package 'glsl-mode)
 
 
+;; --- ein --------------------------------------------------------------------
+
+(require-package 'ein)
+(setq ein:use-auto-complete t)
+
+
+;; --- rust-mode --------------------------------------------------------------
+
+(require-package 'rust-mode)
+
+
 ;; ----------------------------------------------------------------------------
 ;; languages
 ;; ----------------------------------------------------------------------------
@@ -445,15 +459,26 @@
 (define-key evil-normal-state-map "\C-n" nil)
 (global-set-key (kbd "C-n") 'next-buffer)
 
-;; save-load
+;; cgame running
 (setq cgame-path "/Users/nikki/Development/cgame/")
 (setq cgame-scratch-path (concat cgame-path "/usr/scratch.lua"))
-(defun cgame-scratch () (interactive) (write-file cgame-scratch-path))
-(defun cgame-scratch-region ()
-  (interactive)
-  (write-region (region-beginning) (region-end) cgame-scratch-path))
-(define-key evil-normal-state-map ",r" 'cgame-scratch-region)
-(define-key evil-visual-state-map ",r" 'cgame-scratch-region)
+(defun cgame-scratch (&optional start end)
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list nil nil)))
+  (if (and start end)
+      (let ((buf (current-buffer))
+            (n (count-lines 1 start)))
+        (with-temp-buffer
+          (while (> n 0) (insert "\n") (setq n (- n 1)))
+          (insert-buffer-substring buf start end)
+          (write-file cgame-scratch-path)))
+    (let ((buf (current-buffer)))
+      (with-temp-buffer
+        (insert-buffer-substring buf)
+        (write-file cgame-scratch-path)))))
+(define-key evil-normal-state-map ",r" 'cgame-scratch)
+(define-key evil-visual-state-map ",r" 'cgame-scratch)
 
 
 ;; ----------------------------------------------------------------------------
