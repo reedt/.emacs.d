@@ -141,16 +141,52 @@
 (require-package 'yasnippet)
 (yas-global-mode 1)
 
+(setq yas-keymap (let ((map (make-sparse-keymap)))
+                   (define-key map (kbd "C-o") 'yas-next-field-or-maybe-expand)
+                   (define-key map (kbd "C-i") 'yas-prev-field)
+                   (define-key map (kbd "C-g") 'yas-abort-snippet)
+                   (define-key map (kbd "C-d") 'yas-skip-and-clear-or-delete-char)
+                   map))
+
 
 ;; --- company-mode -----------------------------------------------------------
 
-(require-package 'company)
-(defun my-company-c-config ()
- (setq company-clang-arguments (read-c-flags)))
-(add-hook 'c-mode-common-hook 'my-company-c-config)
+;; (require-package 'company)
+;; (defun my-company-c-config ()
+;;  (setq company-clang-arguments (read-c-flags)))
+;; (add-hook 'c-mode-common-hook 'my-company-c-config)
 
-(global-company-mode t)
-(setq company-idle-delay 0.2)
+;; (global-company-mode t)
+;; (setq company-idle-delay 0.2)
+
+
+;; --- auto-complete ----------------------------------------------------------
+
+(require-package 'auto-complete)
+
+(define-key ac-complete-mode-map "\C-n" 'ac-next)
+(define-key ac-complete-mode-map "\C-p" 'ac-previous)
+(setq ac-auto-start nil)
+(setq ac-quick-help-delay 0.5)
+(ac-set-trigger-key "C-y")
+(define-key ac-mode-map  [(control tab)] 'auto-complete)
+
+;; c
+(require-package 'auto-complete-clang)
+(defun ac-cc-mode-setup ()
+  (setq ac-auto-start 3)
+  (setq ac-clang-flags (append (read-c-flags)
+                               '("-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
+                                 "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
+                                 "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+                                 "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include")))
+  (setq ac-sources '(ac-source-clang)))
+
+;; common
+(defun my-ac-config ()
+  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+  (global-auto-complete-mode t))
+(my-ac-config)
 
 
 ;; --- flycheck ---------------------------------------------------------------
@@ -369,6 +405,9 @@
 ;; interface
 ;; ----------------------------------------------------------------------------
 
+;; don't save backup files
+(setq make-backup-files nil)
+
 ;; don't use mac fullscreen
 (setq ns-use-native-fullscreen nil)
 
@@ -403,6 +442,16 @@
 
 ;; allow undo of window config
 (winner-mode 1)
+
+;; disable popup dialogs
+(defadvice yes-or-no-p (around prevent-dialog activate)
+  "Prevent yes-or-no-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
+(defadvice y-or-n-p (around prevent-dialog-yorn activate)
+  "Prevent y-or-n-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
 
 
 ;; ----------------------------------------------------------------------------
