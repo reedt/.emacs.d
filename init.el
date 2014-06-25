@@ -10,11 +10,11 @@
 (set-exec-path-from-shell-PATH)
 
 ;; ----------------------------------------------------------------------------
-;; .clang_complete reading
+;; .cflags reading
 ;; ----------------------------------------------------------------------------
 
 (defun read-c-flags ()
-  "list of flags from upward-found .clang_complete file, nil if not found"
+  "list of flags from upward-found .cflags file, nil if not found"
 
   (defun upward-find-file (filename &optional startdir)
     (let ((dirname (expand-file-name (if startdir startdir ".")))
@@ -32,8 +32,8 @@
       (insert-file-contents path)
       (split-string (buffer-string) "\n" t)))
 
-  (let ((path (upward-find-file ".clang_complete")))
-    (if path (read-lines (concat path ".clang_complete")) nil)))
+  (let ((path (upward-find-file ".cflags")))
+    (if path (read-lines (concat path ".cflags")) nil)))
 
 
 ;; ----------------------------------------------------------------------------
@@ -167,14 +167,14 @@
 (define-key ac-complete-mode-map "\C-n" 'ac-next)
 (define-key ac-complete-mode-map "\C-p" 'ac-previous)
 (setq ac-auto-start nil)
-(setq ac-quick-help-delay 0.5)
-(ac-set-trigger-key "C-y")
-(define-key ac-mode-map  [(control tab)] 'auto-complete)
+(ac-set-trigger-key "C-f")
 
 ;; c
 (require-package 'auto-complete-clang)
 (defun ac-cc-mode-setup ()
-  (setq ac-auto-start 3)
+  ;(setq ac-auto-start 3)
+  ;(setq ac-delay 0.5)
+  ;(setq ac-auto-show-menu 0.5)
   (setq ac-clang-flags (append (read-c-flags)
                                '("-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
@@ -203,7 +203,11 @@
             (t nil)))
     (mapcar #'(lambda (s) (substring s 2))
             (remove-if-not 'include-path-flag-p (read-c-flags))))
-  (setq flycheck-clang-include-path (read-c-includes)))
+  (setq flycheck-clang-include-path (append (read-c-includes)
+                                            '("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
+                                              "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
+                                              "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+                                              "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include"))))
 (add-hook 'c-mode-common-hook 'my-flycheck-c-config)
 
 
@@ -493,7 +497,7 @@
 (global-set-key (kbd "C-n") 'next-buffer)
 
 ;; save-load
-(setq cgame-path "/Users/nikki/Development/cgame/")
+(setq cgame-path "/Users/nikhileshsigatapu/Development/cgame/")
 (setq cgame-scratch-path (concat cgame-path "/usr/scratch.lua"))
 (defun cgame-scratch () (interactive) (write-file cgame-scratch-path))
 (defun cgame-scratch-region ()
@@ -509,11 +513,39 @@
 
 (setq-default indent-tabs-mode nil)
 
-;; c
-(require 'cc-mode)
-(setq c-default-style "bsd" c-basic-offset 4)
-(c-set-offset 'case-label '+)
-(define-key c-mode-base-map (kbd "RET") 'c-indent-new-comment-line)
+;; upthere C
+(add-hook 'c-mode-common-hook
+          (lambda()
+            (setq c-basic-offset 4)
+            (c-set-offset 'arglist-intro '+)
+            (c-set-offset 'arglist-cont-nonempty
+                          '(add c-lineup-arglist-close-under-paren 1))))
+
+;; clang blocks
+(defun my-lineup (langelem)
+  (save-excursion
+    (let ((indent-pos (point)))
+      (if (c-block-in-arglist-dwim (c-langelem-2nd-pos c-syntactic-element))
+          0             ; DWIM case.
+        ;; Normal case.  Indent to the token after the arglist open paren.
+        (goto-char (c-langelem-2nd-pos c-syntactic-element))
+        (if (and c-special-brace-lists
+                 (c-looking-at-special-brace-list))
+            ;; Skip a special brace list opener like "({".
+            (progn (c-forward-token-2)
+                   (forward-char))
+          (forward-char))
+        (let ((arglist-content-start (point)))
+          (c-forward-syntactic-ws)
+          (when (< (point) indent-pos)
+            (goto-char arglist-content-start)
+            (skip-chars-forward " \t"))
+          (vector (current-column)))))))
+(defun my-upc-mode-hook ()
+  (setq c-basic-offset 4)
+  (c-set-offset 'arglist-cont-nonempty '(add my-lineup 0))
+  (c-set-offset 'arglist-close '(add my-lineup 0)))
+(add-hook 'c-mode-hook 'my-upc-mode-hook)
 
 
 ;; ----------------------------------------------------------------------------
@@ -526,3 +558,21 @@
     (erase-buffer)))
 
 
+;; ----------------------------------------------------------------------------
+;; rtags
+;; ----------------------------------------------------------------------------
+
+(add-to-list 'load-path "/Users/nikhileshsigatapu/Development/rtags/src")
+(require 'rtags)
+
+(rtags-enable-standard-keybindings c-mode-base-map)
+
+;; ----------------------------------------------------------------------------
+;; jabber
+;; ----------------------------------------------------------------------------
+
+(setq jabber-account-list 
+      '(("nikhileshsigatapu@upthere.com"
+         (:network-server . "talk.google.com")
+         (:connection-type . ssl)
+         (:port . 443))))
