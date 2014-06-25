@@ -176,7 +176,7 @@
 (defun ac-cc-mode-setup ()
   (setq ac-auto-start 3)
   (setq ac-clang-flags (append (read-c-flags)
-                               '("-code-completion-macros"
+                               '("-code-completion-macros" "-code-completion-patterns"
                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
