@@ -427,8 +427,12 @@
 ;; interface
 ;; ----------------------------------------------------------------------------
 
+;; reduce startup flicker?
+(setq redisplay-dont-pause t)
+
 ;; don't save backup files
 (setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; don't use mac fullscreen
 (setq ns-use-native-fullscreen nil)
@@ -440,10 +444,18 @@
 (set-default 'truncate-lines t)
 (setq initial-scratch-message "")
 (setq inhibit-startup-message t)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; transparency
 (set-frame-parameter (selected-frame) 'alpha '(98 98))
 (add-to-list 'default-frame-alist '(alpha 98 98))
+
+;; scrolling
+(setq scroll-margin 7
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1
+      mouse-wheel-scroll-amount '(0.01))
 
 ;; font
 (defvar *default-font*
@@ -474,6 +486,9 @@
   "Prevent y-or-n-p from activating a dialog"
   (let ((use-dialog-box nil))
     ad-do-it))
+
+;; reload changed files
+(global-auto-revert-mode 1)
 
 
 ;; ----------------------------------------------------------------------------
