@@ -102,7 +102,9 @@
     ";gca" 'magit-commit-amend
     ";gpush" 'git-push
     ";gpull" 'git-pull
-    "c" 'magit-commit
+    "c" 'magit-key-mode-popup-committing
+    "x" 'magit-key-mode-popup-branching
+    "z" 'magit-key-mode-popup-stashing
     ;; I have a git precommit hook which does style checks. Sometimes I want to disable it when committing.
     "C" (lambda() (interactive) (util/with-env-var "SKIP_GIT_STYLE_CHECK" "true" 'magit-commit))
     "e" 'magit-show-level-4-all ; e for exapnd
