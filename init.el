@@ -220,7 +220,6 @@
 ;; --- magit ------------------------------------------------------------------
 
 (require-package 'magit)
-;(require-package 'magit-filenotify)
 
 
 ;; --- haskell-mode -----------------------------------------------------------
@@ -420,6 +419,9 @@
              ;(local-set-key "f" 'doc-view-fit-page)
              ;(local-set-key "w" 'doc-view-fit-width)
              ;(local-set-key "h" 'doc-view-fit-height)))
+
+;; --- magit config -----------------------------------------------------------
+(require 'my-magit)
 
 ;; ----------------------------------------------------------------------------
 ;; interface
