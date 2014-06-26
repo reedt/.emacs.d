@@ -220,6 +220,13 @@
 ;; --- magit ------------------------------------------------------------------
 
 (require-package 'magit)
+(define-key evil-normal-state-map ",gs" 'magit-status)
+(define-key evil-normal-state-map ",gl" 'magit-log)
+
+
+;; --- pcmpl-git --------------------------------------------------------------
+
+(require-package 'pcmpl-git)
 
 
 ;; --- haskell-mode -----------------------------------------------------------
