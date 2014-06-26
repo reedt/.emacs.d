@@ -102,6 +102,7 @@
     ";gca" 'magit-commit-amend
     ";gpush" 'git-push
     ";gpull" 'git-pull
+    "P" 'magit-key-mode-popup-pushing
     "c" 'magit-key-mode-popup-committing
     "x" 'magit-key-mode-popup-branching
     "z" 'magit-key-mode-popup-stashing
@@ -110,10 +111,10 @@
     "e" 'magit-show-level-4-all ; e for exapnd
     "d" 'magit-discard-item
     "s" 'magit-stage-item
-    "S" (lambda () (interactive) (util/without-confirmation 'magit-stage-all))
+    "S" 'magit-stage-all
     "d" 'magit-discard-item
     "u" 'magit-unstage-item
-    "U" (lambda () (interactive (util/without-confirmation 'magit-unstage-all)))
+    "U" 'magit-unstage-all
     (kbd "SPC") 'magit-goto-previous-section
     "-" 'magit-diff-smaller-hunks
     "+" 'magit-diff-larger-hunks

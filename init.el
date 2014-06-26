@@ -460,6 +460,12 @@
       scroll-conservatively 10000
       scroll-preserve-screen-position 1
       mouse-wheel-scroll-amount '(0.01))
+(defun disable-scroll-margin ()
+  (set (make-local-variable 'scroll-margin) 0))
+(add-hook 'shell-mode-hook 'disable-scroll-margin)
+(add-hook 'eshell-mode-hook 'disable-scroll-margin)
+(add-hook 'gud-mode-hook 'disable-scroll-margin)
+(add-hook 'magit-mode-hook 'disable-scroll-margin)
 
 ;; font
 (defvar *default-font*
