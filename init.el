@@ -57,10 +57,15 @@
     (require package)))
 
 
-;; --- color-theme-sanityinc-tomorrow -----------------------------------------
+;; --- theme ------------------------------------------------------------------
 
-(require-package 'color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-night t)
+;(require-package 'color-theme-sanityinc-tomorrow)
+;(load-theme 'sanityinc-tomorrow-night t)
+
+;(require-package 'leuven-theme)
+;(load-theme 'leuven t)
+
+(require-package 'soothe-theme)
 
 
 ;; --- evil -------------------------------------------------------------------
@@ -76,6 +81,36 @@
 (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
 (setq-default evil-cross-lines t)
+
+
+;; --- powerline --------------------------------------------------------------
+
+(require-package 'powerline)
+(powerline-default-theme)
+
+
+;; --- diminish ---------------------------------------------------------------
+
+(require-package 'diminish)
+(when (display-graphic-p)
+  (eval-after-load "magit"
+                   '(diminish 'magit-auto-revert-mode))
+  (eval-after-load "git-gutter"
+                   '(diminish 'git-gutter-mode))
+  (eval-after-load "undo-tree"
+                   '(diminish 'undo-tree-mode))
+  (eval-after-load "abbrev"
+                   '(diminish 'abbrev-mode))
+  (eval-after-load "auto-complete"
+                   '(diminish 'auto-complete-mode " ac"))
+  (eval-after-load "flycheck"
+                   '(diminish 'flycheck-mode " fly"))
+  (eval-after-load "projectile"
+                   '(diminish 'projectile-mode " pr"))
+  (eval-after-load "flyspell"
+                   '(diminish 'flyspell-mode " flysp"))
+  (eval-after-load "yasnippet"
+                   '(diminish 'yas-minor-mode " yas")))
 
 
 ;; --- evil-nerd-commenter ----------------------------------------------------
@@ -115,25 +150,11 @@
 (projectile-global-mode)
 
 
-;; --- multi-term -------------------------------------------------------------
-
-(require-package 'multi-term)
-(setq multi-term-program "/bin/bash")
-(setq term-unbind-key-list '("C-z" "C-x" "C-c" "C-y" "<ESC>"
-                             "C-h" "C-l" "C-k" "C-j"))
-
-
 ;; --- project-explorer -------------------------------------------------------
 
 (require-package 'project-explorer)
 (add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
 (setq pe/width 23)
-
-
-;; --- git-gutter-fringe ------------------------------------------------------
-
-(require-package 'git-gutter-fringe)
-(global-git-gutter-mode t)
 
 
 ;; --- yasnippet --------------------------------------------------------------
@@ -149,17 +170,6 @@
                    map))
 
 
-;; --- company-mode -----------------------------------------------------------
-
-;; (require-package 'company)
-;; (defun my-company-c-config ()
-;;  (setq company-clang-arguments (read-c-flags)))
-;; (add-hook 'c-mode-common-hook 'my-company-c-config)
-
-;; (global-company-mode t)
-;; (setq company-idle-delay 0.2)
-
-
 ;; --- auto-complete ----------------------------------------------------------
 
 (require-package 'auto-complete)
@@ -167,14 +177,11 @@
 (define-key ac-complete-mode-map "\C-n" 'ac-next)
 (define-key ac-complete-mode-map "\C-p" 'ac-previous)
 (setq ac-auto-start nil)
-(setq ac-quick-help-delay 0.5)
-(ac-set-trigger-key "C-y")
-(define-key ac-mode-map  [(control tab)] 'auto-complete)
+(ac-set-trigger-key "C-f")
 
 ;; c
 (require-package 'auto-complete-clang)
 (defun ac-cc-mode-setup ()
-  (setq ac-auto-start 3)
   (setq ac-clang-flags (append (read-c-flags)
                                '("-code-completion-macros" "-code-completion-patterns"
                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
@@ -245,75 +252,10 @@
     (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
 
-;; --- w3m --------------------------------------------------------------------
-
-(require-package 'w3m)
-(setq browse-url-browser-function 'w3m-goto-url-new-session)
-(setq w3m-user-agent "Mozilla/5.0 (Linux; U; Android 2.3.3; zh-tw; HTC_Pyramid Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.")
-(setq w3m-default-display-inline-images t)
-(add-hook 'w3m-mode-hook (lambda () (evil-normal-state)))
-
-(defun reddit (reddit)
-  "Opens the REDDIT in w3m-new-session"
-  (interactive (list
-                 (read-string "Enter the reddit (default: gamedev): " nil nil "gamedev" nil)))
-  (browse-url (format "http://m.reddit.com/r/%s" reddit))
-  )
-
-(defun wikipedia-search (search-term)
-  "Search for SEARCH-TERM on wikipedia"
-  (interactive
-    (let ((term (if mark-active
-                  (buffer-substring (region-beginning) (region-end))
-                  (word-at-point))))
-      (list
-        (read-string
-          (format "Wikipedia (%s):" term) nil nil term)))
-    )
-  (browse-url
-    (concat
-      "http://en.m.wikipedia.org/w/index.php?search="
-      search-term
-      ))
-  )
-
-
 ;; --- window-numbering -------------------------------------------------------
 
 (require-package 'window-numbering)
 (window-numbering-mode)
-
-
-;; --- win-switch -------------------------------------------------------------
-
-(require-package 'win-switch)
-(setq win-switch-window-threshold 0)
-(setq win-switch-other-window-first nil)
-(setq win-switch-idle-time 5)
-
-;; move
-(win-switch-set-keys '("h") 'left)
-(win-switch-set-keys '("k") 'up)
-(win-switch-set-keys '("j") 'down)
-(win-switch-set-keys '("l") 'right)
-(win-switch-set-keys '("n") 'next-window)
-(win-switch-set-keys '("p") 'previous-window)
-(win-switch-set-keys '("O") 'other-frame)
-
-;; resize
-(win-switch-set-keys '("K") 'enlarge-vertically)
-(win-switch-set-keys '("J") 'shrink-vertically)
-(win-switch-set-keys '("H") 'enlarge-horizontally)
-(win-switch-set-keys '("L") 'shrink-horizontally)
-
-;; modify
-(win-switch-set-keys '("v") 'split-horizontally)
-(win-switch-set-keys '("s") 'split-vertically)
-(win-switch-set-keys '("d") 'delete-window)
-
-(win-switch-set-keys '("\M-\C-g") 'emergency-exit)
-
-(global-set-key (kbd "C-'") 'win-switch-dispatch)
 
 
 ;; --- buffer-move ------------------------------------------------------------
@@ -419,16 +361,9 @@
 ;; --- gud (with lldb) --------------------------------------------------------
 (require 'gud)
 
-;; --- doc-view-fit-to-page ---------------------------------------------------
-;(require 'doc-view-fit-page)
-;(add-hook 'doc-view-mode-hook
-          ;'(lambda ()
-             ;(local-set-key "f" 'doc-view-fit-page)
-             ;(local-set-key "w" 'doc-view-fit-width)
-             ;(local-set-key "h" 'doc-view-fit-height)))
-
 ;; --- magit config -----------------------------------------------------------
 (require 'my-magit)
+
 
 ;; ----------------------------------------------------------------------------
 ;; interface
@@ -584,5 +519,9 @@
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)))
+
+(add-hook 'eshell-mode-hook
+          '(lambda () (setenv "TERM" "eterm-color")))
+(add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
 
 
