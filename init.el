@@ -232,6 +232,12 @@
 (define-key evil-normal-state-map ",gl" 'magit-log)
 
 
+;; --- diff-hl ----------------------------------------------------------------
+
+(require-package 'diff-hl)
+(global-diff-hl-mode)
+
+
 ;; --- pcmpl-git --------------------------------------------------------------
 
 (require-package 'pcmpl-git)
