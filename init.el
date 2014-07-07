@@ -59,13 +59,16 @@
 
 ;; --- theme ------------------------------------------------------------------
 
-;(require-package 'color-theme-sanityinc-tomorrow)
-;(load-theme 'sanityinc-tomorrow-night t)
+(require-package 'color-theme-sanityinc-tomorrow)
+(load-theme 'sanityinc-tomorrow-night t)
 
 ;(require-package 'leuven-theme)
 ;(load-theme 'leuven t)
 
-(require-package 'soothe-theme)
+;(require-package 'soothe-theme)
+
+;(require-package 'hemisu-theme)
+;(load-theme 'hemisu-dark t)
 
 
 ;; --- evil -------------------------------------------------------------------
@@ -353,7 +356,8 @@
 
 (require-package 'rainbow-identifiers)
 (setq rainbow-identifiers-faces-to-override '(font-lock-type-face font-lock-variable-name-face))
-(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
+;(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
+(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-predefined-choose-face)
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
 
