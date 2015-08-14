@@ -9,31 +9,32 @@
     (setq exec-path (split-string path-from-shell path-separator))))
 (set-exec-path-from-shell-PATH)
 
+
 ;; ----------------------------------------------------------------------------
 ;; .clang_complete reading
 ;; ----------------------------------------------------------------------------
 
-(defun read-c-flags ()
-  "list of flags from upward-found .clang_complete file, nil if not found"
+;; (defun read-c-flags ()
+;;   "list of flags from upward-found .clang_complete file, nil if not found"
 
-  (defun upward-find-file (filename &optional startdir)
-    (let ((dirname (expand-file-name (if startdir startdir ".")))
-          (found nil)
-          (top nil))
-      (while (not (or found top))
-             (if (string= (expand-file-name dirname) "/") (setq top t))
-             (if (file-exists-p (expand-file-name filename dirname))
-               (setq found t)
-               (setq dirname (expand-file-name ".." dirname))))
-      (if found (concat dirname "/") nil)))
+;;   (defun upward-find-file (filename &optional startdir)
+;;     (let ((dirname (expand-file-name (if startdir startdir ".")))
+;;           (found nil)
+;;           (top nil))
+;;       (while (not (or found top))
+;;              (if (string= (expand-file-name dirname) "/") (setq top t))
+;;              (if (file-exists-p (expand-file-name filename dirname))
+;;                (setq found t)
+;;                (setq dirname (expand-file-name ".." dirname))))
+;;       (if found (concat dirname "/") nil)))
 
-  (defun read-lines (path)
-    (with-temp-buffer
-      (insert-file-contents path)
-      (split-string (buffer-string) "\n" t)))
+;;   (defun read-lines (path)
+  ;;   (with-temp-buffer
+  ;;     (insert-file-contents path)
+  ;;     (split-string (buffer-string) "\n" t)))
 
-  (let ((path (upward-find-file ".clang_complete")))
-    (if path (read-lines (concat path ".clang_complete")) nil)))
+  ;; (let ((path (upward-find-file ".clang_complete")))
+  ;;   (if path (read-lines (concat path ".clang_complete")) nil)))
 
 
 ;; ----------------------------------------------------------------------------
@@ -59,12 +60,6 @@
 
 ;; --- theme ------------------------------------------------------------------
 
-; (require-package 'color-theme-sanityinc-tomorrow)
-; (load-theme 'sanityinc-tomorrow-night t)
-
-; (require-package 'zenburn-theme)
-; (load-theme 'zenburn t)
-
 (require-package 'monokai-theme)
 (load-theme 'monokai t)
 
@@ -84,12 +79,12 @@
 (setq-default evil-cross-lines t)
 
 
-; ;; --- powerline --------------------------------------------------------------
-;
-; (require-package 'powerline)
-; (powerline-default-theme)
-;
-;
+;; --- powerline --------------------------------------------------------------
+
+(require-package 'powerline)
+(powerline-default-theme)
+
+
 ; ;; --- diminish ---------------------------------------------------------------
 ;
 ; (require-package 'diminish)
@@ -116,8 +111,8 @@
 ;
 ;; --- evil-nerd-commenter ----------------------------------------------------
 
+(require 'cl)
 (require-package 'evil-nerd-commenter)
-(define-key evil-normal-state-map ",ci" 'evilnc-comment-or-uncomment-lines)
 (define-key evil-normal-state-map ",cl" 'evilnc-comment-or-uncomment-to-the-line)
 (define-key evil-normal-state-map ",cc" 'evilnc-comment-or-uncomment-lines)
 (define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
@@ -159,46 +154,71 @@
 ; (setq pe/width 23)
 ;
 ;
-; ;; --- yasnippet --------------------------------------------------------------
-;
-; (require-package 'yasnippet)
-; (yas-global-mode 1)
-;
-; (setq yas-keymap (let ((map (make-sparse-keymap)))
-;                    (define-key map (kbd "C-o") 'yas-next-field-or-maybe-expand)
-;                    (define-key map (kbd "C-i") 'yas-prev-field)
-;                    (define-key map (kbd "C-g") 'yas-abort-snippet)
-;                    (define-key map (kbd "C-d") 'yas-skip-and-clear-or-delete-char)
-;                    map))
-;
-;
-; ;; --- auto-complete ----------------------------------------------------------
-;
-; (require-package 'auto-complete)
-;
-; (define-key ac-complete-mode-map "\C-n" 'ac-next)
-; (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-; (setq ac-auto-start nil)
-; (ac-set-trigger-key "C-f")
-;
-; ;; c
-; (require-package 'auto-complete-clang)
-; (defun ac-cc-mode-setup ()
-;   (setq ac-clang-flags (append (read-c-flags)
-;                                '("-code-completion-macros" "-code-completion-patterns"
-;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
-;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
-;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
-;                                  "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include")))
-;   (setq ac-sources '(ac-source-clang)))
-;
-; ;; common
-; (defun my-ac-config ()
-;   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-;   (global-auto-complete-mode t))
-; (my-ac-config)
-;
-;
+;; --- yasnippet --------------------------------------------------------------
+
+;; (require-package 'yasnippet)
+;; (yas-global-mode 1)
+
+;; (setq yas-keymap (let ((map (make-sparse-keymap)))
+;;                    (define-key map (kbd "C-o") 'yas-next-field-or-maybe-expand)
+;;                    (define-key map (kbd "C-i") 'yas-prev-field)
+;;                    (define-key map (kbd "C-g") 'yas-abort-snippet)
+;;                    (define-key map (kbd "C-d") 'yas-skip-and-clear-or-delete-char)
+;;                    map))
+
+
+;; --- irony ----------------------------------------------------------
+
+(require-package 'irony)
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; --- auto-complete ----------------------------------------------------------
+
+;; (require-package 'auto-complete)
+
+;; (ac-config-default)
+;; (define-key ac-complete-mode-map "\C-n" 'ac-next)
+;; (define-key ac-complete-mode-map "\C-p" 'ac-previous)
+;; (setq ac-auto-start nil)
+;; (ac-set-trigger-key "TAB")
+
+;; (ac-set-trigger-key "C-f")
+
+;; c
+;; (require-package 'auto-complete-clang)
+;; (define-key evil-normal-state-map ",d" 'ac-complete-clang)
+
+;; (global-set-key (kbd "TAB") 'ac-complete-clang)
+
+;; (defun ac-cc-mode-setup ()
+;;   (setq ac-clang-flags (append (read-c-flags)
+;;                                '("-code-completion-macros" "-code-completion-patterns"
+;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
+;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
+;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+  ;;                                "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include")))
+  ;; (setq ac-sources '(ac-source-clang)))
+
+;; common
+;; (defun my-ac-config ()
+;;   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+;;   (global-auto-complete-mode t))
+;; (my-ac-config)
+
+
 ; ;; --- flycheck ---------------------------------------------------------------
 ;
 ; (require-package 'flycheck)
@@ -369,6 +389,12 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;; paren matching
+(show-paren-mode 1)
+
+;; disable menu bar
+(menu-bar-mode 0)
+
 ; ;; don't use mac fullscreen
 ; (setq ns-use-native-fullscreen nil)
 ;
@@ -381,28 +407,33 @@
 ; (setq inhibit-startup-message t)
 ; (defalias 'yes-or-no-p 'y-or-n-p)
 ;
-; ;; transparency
-; (set-frame-parameter (selected-frame) 'alpha '(98 98))
-; (add-to-list 'default-frame-alist '(alpha 98 98))
-;
-; ;; scrolling
-; (setq scroll-margin 7
-;       scroll-step 1
-;       scroll-conservatively 10000
-;       scroll-preserve-screen-position 1
-;       mouse-wheel-scroll-amount '(0.01))
-; (defun disable-scroll-margin ()
-;   (set (make-local-variable 'scroll-margin) 0))
-; (add-hook 'shell-mode-hook 'disable-scroll-margin)
-; (add-hook 'eshell-mode-hook 'disable-scroll-margin)
-; (add-hook 'gud-mode-hook 'disable-scroll-margin)
-; (add-hook 'magit-mode-hook 'disable-scroll-margin)
-;
-; ;; font
-; (defvar *default-font*
-;   "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
-; (when window-system (set-face-font 'default *default-font*))
-;
+;; scrolling
+(setq scroll-margin 7
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1
+      mouse-wheel-scroll-amount '(0.01))
+(defun disable-scroll-margin ()
+  (set (make-local-variable 'scroll-margin) 0))
+(add-hook 'shell-mode-hook 'disable-scroll-margin)
+(add-hook 'eshell-mode-hook 'disable-scroll-margin)
+(add-hook 'gud-mode-hook 'disable-scroll-margin)
+(add-hook 'magit-mode-hook 'disable-scroll-margin)
+
+;; Enable mouse support
+(unless window-system
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (global-set-key [mouse-4] (lambda ()
+                              (interactive)
+                              (scroll-down 1)))
+  (global-set-key [mouse-5] (lambda ()
+                              (interactive)
+                              (scroll-up 1)))
+  (defun track-mouse (e))
+  (setq mouse-sel-mode t)
+)
+
 ; ;; gdb
 ; (setq gdb-many-windows t)
 ;
@@ -515,3 +546,30 @@
 ; (key-chord-define evil-insert-state-map "nn" 'evil-normal-state)
 ; ;; and while we're at it bind jk to the indispensable insert-normal mode (ctrl-o)
 ; ;(key-chord-define evil-insert-state-map "jk" 'evil-execute-in-normal-state)
+;
+;; ----------------------------------------------------------------------------
+;; column-marker
+;; ----------------------------------------------------------------------------
+
+(require-package 'column-marker)
+(add-hook 'c++-mode-hook (lambda () (interactive) (column-marker-1 100)))
+
+
+;; ----------------------------------------------------------------------------
+;; ace-jump
+;; ----------------------------------------------------------------------------
+
+(require-package 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+;; ----------------------------------------------------------------------------
+;; hideshow
+;; ----------------------------------------------------------------------------
+
+(global-set-key (kbd "<backtab>") 'hs-toggle-hiding)
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+(add-hook 'lisp-mode-hook       'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
