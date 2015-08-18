@@ -333,18 +333,14 @@
 ;; disable menu bar
 (menu-bar-mode 0)
 
-; ;; don't use mac fullscreen
-; (setq ns-use-native-fullscreen nil)
-;
 ; ;; cleanup
-; (menu-bar-mode 0)
 ; (tool-bar-mode -1)
 ; (scroll-bar-mode -1)
 ; (set-default 'truncate-lines t)
 ; (setq initial-scratch-message "")
 ; (setq inhibit-startup-message t)
 ; (defalias 'yes-or-no-p 'y-or-n-p)
-;
+
 ;; scrolling
 (setq scroll-margin 7
       scroll-step 1
@@ -502,3 +498,10 @@
 
 (require-package 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+
+;; ----------------------------------------------------------------------------
+;; org
+;; ----------------------------------------------------------------------------
+
+(require-package 'org)
