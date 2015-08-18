@@ -169,21 +169,22 @@
 
 ;; --- irony ----------------------------------------------------------
 
-(require-package 'irony)
+;; (require-package 'irony)
 
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'objc-mode-hook 'irony-mode)
 
-;; replace the `completion-at-point' and `complete-symbol' bindings in
-;; irony-mode's buffers by irony-mode's function
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;; ;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; ;; irony-mode's buffers by irony-mode's function
+;; (defun my-irony-mode-hook ()
+;;   (define-key irony-mode-map [remap completion-at-point]
+;;     'irony-completion-at-point-async)
+;;   (define-key irony-mode-map [remap complete-symbol]
+;;     'irony-completion-at-point-async))
+;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
 
 ;; --- auto-complete ----------------------------------------------------------
 
@@ -518,6 +519,7 @@
 (c-set-offset 'case-label '+)
 (define-key c-mode-base-map (kbd "RET") 'c-indent-new-comment-line)
 
+; delete trailing whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
@@ -534,18 +536,6 @@
 ;           '(lambda () (setenv "TERM" "eterm-color")))
 ; (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
 ;
-;
-; ;; ----------------------------------------------------------------------------
-; ;; key-chord
-; ;; ----------------------------------------------------------------------------
-;
-; (require-package 'key-chord)
-; (key-chord-mode 1)
-; ;(setq key-chord-two-keys-delay 0.5)
-; ;; bind the escape to jj
-; (key-chord-define evil-insert-state-map "nn" 'evil-normal-state)
-; ;; and while we're at it bind jk to the indispensable insert-normal mode (ctrl-o)
-; ;(key-chord-define evil-insert-state-map "jk" 'evil-execute-in-normal-state)
 ;
 ;; ----------------------------------------------------------------------------
 ;; column-marker
