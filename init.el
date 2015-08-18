@@ -291,79 +291,16 @@
 ; (require-package 'dired-subtree)
 ;
 ;
-; ;; --- auctex -----------------------------------------------------------------
-;
-; (require 'tex)
-; (require 'preview)
-; (setq TeX-auto-save t)
-; (setq TeX-parse-self t)
-; (setq TeX-PDF-mode t)
-; (TeX-global-PDF-mode t)
-; (setq-default TeX-master nil)
-;
-; (require 'tex-site)
-; (add-hook 'TeX-mode-hook
-;           (lambda ()
-;             (add-to-list 'TeX-output-view-style
-;                          '("^pdf$" "."
-;                            "/Applications/Skim.app/Contents/SharedSupport/displayline %n %o %b"))))
-;
-;
 ; ;; --- maxframe ---------------------------------------------------------------
 ;
 ; (require-package 'maxframe)
 ; (add-hook 'window-setup-hook 'maximize-frame t)
 ;
 ;
-; ;; --- web-mode ---------------------------------------------------------------
-;
-; (require-package 'web-mode)
-; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-; (setq web-mode-engines-alist '(("django" . "\\.html\\'")))
-;
-;
 ; ;; --- zencoding --------------------------------------------------------------
 ;
 ; (require-package 'zencoding-mode)
 ; (add-hook 'web-mode-hook 'zencoding-mode)
-;
-;
-; ;; --- glsl-mode --------------------------------------------------------------
-;
-; (require-package 'glsl-mode)
-;
-;
-; ;; --- ein --------------------------------------------------------------------
-;
-; (require-package 'ein)
-; (setq ein:use-auto-complete t)
-;
-;
-; ;; --- rust-mode --------------------------------------------------------------
-;
-; (require-package 'rust-mode)
-;
-;
-; ;; --- js2-mode ---------------------------------------------------------------
-;
-; (require-package 'js2-mode)
-;
-;
-; ;; ----------------------------------------------------------------------------
-; ;; languages
-; ;; ----------------------------------------------------------------------------
-;
-; (setq lua-indent-level 4)
-; (require-package 'lua-mode)
-;
-; (require-package 'cmake-mode)
 ;
 ;
 ;; ----------------------------------------------------------------------------
