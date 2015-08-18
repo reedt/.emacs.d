@@ -64,7 +64,15 @@
 (load-theme 'monokai t)
 
 
+;; --- org ---------------------------------------------------------------------
+
+(require-package 'org)
+
+
 ;; --- evil -------------------------------------------------------------------
+
+; compatibility with org mode (TAB conflict)
+(setq evil-want-C-i-jump nil)
 
 (setq evil-want-C-u-scroll t)
 
@@ -498,10 +506,3 @@
 
 (require-package 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-
-;; ----------------------------------------------------------------------------
-;; org
-;; ----------------------------------------------------------------------------
-
-(require-package 'org)
