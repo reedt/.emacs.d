@@ -459,11 +459,24 @@
 ;   "Prevent y-or-n-p from activating a dialog"
 ;   (let ((use-dialog-box nil))
 ;     ad-do-it))
-;
-; ;; reload changed files
-; (global-auto-revert-mode 1)
-;
-;
+
+;; reload changed files
+(global-auto-revert-mode 1)
+
+
+;; ----------------------------------------------------------------------------
+;; hideshow
+;; ----------------------------------------------------------------------------
+
+(global-set-key (kbd "<backtab>") 'hs-toggle-hiding)
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+(add-hook 'lisp-mode-hook       'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
+
+
 ;; ----------------------------------------------------------------------------
 ;; keys
 ;; ----------------------------------------------------------------------------
@@ -505,6 +518,7 @@
 ;; linum-mode
 (define-key evil-normal-state-map "\C-q" nil)
 (global-set-key (kbd "C-q") 'linum-mode)
+
 
 ;; ----------------------------------------------------------------------------
 ;; formatting
@@ -551,15 +565,3 @@
 
 (require-package 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-;; ----------------------------------------------------------------------------
-;; hideshow
-;; ----------------------------------------------------------------------------
-
-(global-set-key (kbd "<backtab>") 'hs-toggle-hiding)
-(add-hook 'c-mode-common-hook   'hs-minor-mode)
-(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-(add-hook 'java-mode-hook       'hs-minor-mode)
-(add-hook 'lisp-mode-hook       'hs-minor-mode)
-(add-hook 'perl-mode-hook       'hs-minor-mode)
-(add-hook 'sh-mode-hook         'hs-minor-mode)
