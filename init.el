@@ -487,3 +487,7 @@
 (require-package 'company-irony)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
+
+;; --- xcscope -----------------------------------------------------------
+(require-package 'xcscope)
+(cscope-setup)
