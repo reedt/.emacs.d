@@ -72,7 +72,7 @@
 ;; --- evil -------------------------------------------------------------------
 
 ; compatibility with org mode (TAB conflict)
-(setq evil-want-C-i-jump nil)
+;; (setq evil-want-C-i-jump nil)
 
 (setq evil-want-C-u-scroll t)
 
@@ -86,6 +86,10 @@
 
 (setq-default evil-cross-lines t)
 
+
+;; --- evil-jumper --------------------------------------------------------------
+(require-package 'evil-jumper)
+(add-hook 'after-init-hook #'(lambda () (evil-jumper-mode 1)))
 
 ;; --- powerline --------------------------------------------------------------
 
@@ -127,27 +131,27 @@
 (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
 
 
-; ;; --- flx-ido ----------------------------------------------------------------
-;
-; (require-package 'flx-ido)
-; (ido-mode 1)
-; (ido-everywhere 1)
-; (flx-ido-mode 1)
-; (setq ido-use-faces nil)
-;
-;
-; ;; --- ido-ubiquitos ----------------------------------------------------------
-;
-; (require-package 'ido-ubiquitous)
-; (ido-ubiquitous-mode)
-;
-;
-; ;; --- smex -------------------------------------------------------------------
-;
-; (require-package 'smex)
-; (smex-initialize)
-;
-;
+;; --- flx-ido ----------------------------------------------------------------
+
+(require-package 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+(setq ido-use-faces nil)
+
+
+;; --- ido-ubiquitos ----------------------------------------------------------
+
+(require-package 'ido-ubiquitous)
+(ido-ubiquitous-mode)
+
+
+;; --- smex -------------------------------------------------------------------
+
+(require-package 'smex)
+(smex-initialize)
+
+
 ; ;; --- projectile -------------------------------------------------------------
 ;
 ; (require-package 'projectile)
@@ -160,72 +164,6 @@
 ; (require-package 'project-explorer)
 ; (add-to-list 'evil-emacs-state-modes 'project-explorer-mode)
 ; (setq pe/width 23)
-;
-;
-;; --- yasnippet --------------------------------------------------------------
-
-;; (require-package 'yasnippet)
-;; (yas-global-mode 1)
-
-;; (setq yas-keymap (let ((map (make-sparse-keymap)))
-;;                    (define-key map (kbd "C-o") 'yas-next-field-or-maybe-expand)
-;;                    (define-key map (kbd "C-i") 'yas-prev-field)
-;;                    (define-key map (kbd "C-g") 'yas-abort-snippet)
-;;                    (define-key map (kbd "C-d") 'yas-skip-and-clear-or-delete-char)
-;;                    map))
-
-
-;; --- irony ----------------------------------------------------------
-
-;; (require-package 'irony)
-
-;; (add-hook 'c++-mode-hook 'irony-mode)
-;; (add-hook 'c-mode-hook 'irony-mode)
-;; (add-hook 'objc-mode-hook 'irony-mode)
-
-;; ;; replace the `completion-at-point' and `complete-symbol' bindings in
-;; ;; irony-mode's buffers by irony-mode's function
-;; (defun my-irony-mode-hook ()
-;;   (define-key irony-mode-map [remap completion-at-point]
-;;     'irony-completion-at-point-async)
-;;   (define-key irony-mode-map [remap complete-symbol]
-;;     'irony-completion-at-point-async))
-;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-
-;; --- auto-complete ----------------------------------------------------------
-
-;; (require-package 'auto-complete)
-
-;; (ac-config-default)
-;; (define-key ac-complete-mode-map "\C-n" 'ac-next)
-;; (define-key ac-complete-mode-map "\C-p" 'ac-previous)
-;; (setq ac-auto-start nil)
-;; (ac-set-trigger-key "TAB")
-
-;; (ac-set-trigger-key "C-f")
-
-;; c
-;; (require-package 'auto-complete-clang)
-;; (define-key evil-normal-state-map ",d" 'ac-complete-clang)
-
-;; (global-set-key (kbd "TAB") 'ac-complete-clang)
-
-;; (defun ac-cc-mode-setup ()
-;;   (setq ac-clang-flags (append (read-c-flags)
-;;                                '("-code-completion-macros" "-code-completion-patterns"
-;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1"
-;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include"
-;;                                  "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
-  ;;                                "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include")))
-  ;; (setq ac-sources '(ac-source-clang)))
-
-;; common
-;; (defun my-ac-config ()
-;;   (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-;;   (global-auto-complete-mode t))
-;; (my-ac-config)
 
 
 ; ;; --- flycheck ---------------------------------------------------------------
@@ -254,6 +192,13 @@
 (require-package 'perspective)
 
 (add-hook 'after-init-hook #'(lambda () (persp-mode 1)))
+
+(define-key evil-normal-state-map ";w" 'persp-switch)
+(define-key evil-normal-state-map ";r" 'persp-rename)
+(define-key evil-normal-state-map ";k" 'persp-kill)
+(define-key evil-normal-state-map ",a" 'persp-add-buffer)
+(define-key evil-normal-state-map ",i" 'persp-import)
+(define-key evil-normal-state-map ",k" 'persp-remove-buffer)
 
 
 ; ;; --- magit ------------------------------------------------------------------
@@ -303,12 +248,6 @@
 ;
 ; (require-package 'maxframe)
 ; (add-hook 'window-setup-hook 'maximize-frame t)
-;
-;
-; ;; --- zencoding --------------------------------------------------------------
-;
-; (require-package 'zencoding-mode)
-; (add-hook 'web-mode-hook 'zencoding-mode)
 ;
 ;
 ;; ----------------------------------------------------------------------------
@@ -382,9 +321,9 @@
 ; ;; dired
 ; (setq-default dired-listing-switches "-alhv")
 ;
-; ;; uniquify
-; (require 'uniquify)
-;
+;; uniquify
+(require 'uniquify)
+
 ; ;; continuous scroll for doc-view
 ; (setq doc-view-continuous t)
 ;
@@ -422,23 +361,19 @@
 ;; keys
 ;; ----------------------------------------------------------------------------
 
-; ;; find
-; (define-key evil-normal-state-map ",f" 'projectile-find-file)
-; (define-key evil-normal-state-map " " 'projectile-find-file)
-;
-; ;; apps
-; (global-set-key (kbd "M-x") 'smex)
-; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-; (define-key evil-normal-state-map ",t" 'eshell)
-; (define-key evil-normal-state-map ",p" 'project-explorer-open)
+; separate <tab> and "C-i"
+(setq local-function-key-map (delq '(kp-tab . [9]) local-function-key-map))
+(global-set-key (kbd "C-i") 'forward-word)
 
-;; persp
-(define-key evil-normal-state-map ";w" 'persp-switch)
-(define-key evil-normal-state-map ";r" 'persp-rename)
-(define-key evil-normal-state-map ";k" 'persp-kill)
-(define-key evil-normal-state-map ",a" 'persp-add-buffer)
-(define-key evil-normal-state-map ",i" 'persp-import)
-(define-key evil-normal-state-map ",k" 'persp-remove-buffer)
+;; ;; find
+;; (define-key evil-normal-state-map ",f" 'projectile-find-file)
+;; (define-key evil-normal-state-map " " 'projectile-find-file)
+
+;; apps
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; (define-key evil-normal-state-map ",t" 'eshell)
+;; (define-key evil-normal-state-map ",p" 'project-explorer-open)
 
 ;; splits
 (define-key evil-normal-state-map ",s" 'split-window-below)
@@ -456,7 +391,10 @@
 (define-key evil-normal-state-map "\C-n" nil)
 (global-set-key (kbd "C-n") 'next-buffer)
 
-;; linum-mode
+
+;; --- linum-mode --------------------------------------------------------------
+
+(global-linum-mode 1)
 (define-key evil-normal-state-map "\C-q" nil)
 (global-set-key (kbd "C-q") 'linum-mode)
 
@@ -492,17 +430,60 @@
 ; (add-hook 'eshell-preoutput-filter-functions 'ansi-color-apply)
 ;
 ;
-;; ----------------------------------------------------------------------------
-;; column-marker
-;; ----------------------------------------------------------------------------
+;; --- column-marker ------------------------------------------------------------
 
 (require-package 'column-marker)
 (add-hook 'c++-mode-hook (lambda () (interactive) (column-marker-1 100)))
 
 
-;; ----------------------------------------------------------------------------
-;; ace-jump
-;; ----------------------------------------------------------------------------
+;; --- ace-jump ---------------------------------------------------------------
 
 (require-package 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+
+;; --- yasnippet --------------------------------------------------------------
+
+(require-package 'yasnippet)
+(yas-global-mode 1)
+
+(setq yas-keymap (let ((map (make-sparse-keymap)))
+                   (define-key map (kbd "C-o") 'yas-next-field-or-maybe-expand)
+                   (define-key map (kbd "C-i") 'yas-prev-field)
+                   (define-key map (kbd "C-g") 'yas-abort-snippet)
+                   (define-key map (kbd "C-d") 'yas-skip-and-clear-or-delete-char)
+                   map))
+
+
+;; --- company ------------------------------------------------------------
+
+(require-package 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-minimum-prefix-length 0)
+(setq company-idle-delay 0)
+
+
+;; --- irony ----------------------------------------------------------
+
+(require-package 'irony)
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+
+;; --- company-irony ----------------------------------------------------------
+
+(require-package 'company-irony)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
