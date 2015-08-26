@@ -489,5 +489,16 @@
   '(add-to-list 'company-backends 'company-irony))
 
 ;; --- xcscope -----------------------------------------------------------
+
 (require-package 'xcscope)
 (cscope-setup)
+
+;; --- workgroups -----------------------------------------------------------
+
+(require-package 'workgroups)
+(workgroups-mode 1)
+(define-key evil-normal-state-map "\C-z" nil)
+(define-key evil-motion-state-map "\C-z" nil)
+(setq wg-prefix-key (kbd "C-z"))
+(setq wg-morph-hsteps 5)
+(setq wg-morph-vsteps 5)
